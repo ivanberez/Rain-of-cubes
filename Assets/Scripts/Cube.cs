@@ -1,8 +1,9 @@
+using Assets.Scripts;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(MeshRenderer))]
-public class Cube : MonoBehaviour
-{    
+public class Cube : MonoBehaviour, ISpawnedObject<Cube>
+{
     [SerializeField] private int _minReleaseTime;
     [SerializeField] private int _maxReleaseTime;
 
@@ -10,10 +11,12 @@ public class Cube : MonoBehaviour
     private Color _defaulColor;
 
     private SpawnerCubes _spawner;
-    private Platform _collisionPlatform;    
-   
+    private Platform _collisionPlatform;
+
+    public event System.Action<Cube> ReadyOnReleasing;
+
     private void Awake()
-    {        
+    {
         _meshRenderer = GetComponent<MeshRenderer>();
         _defaulColor = _meshRenderer.material.color;
     }
@@ -27,9 +30,7 @@ public class Cube : MonoBehaviour
             else if (_collisionPlatform != platform)
                 ChangeCollisionPlatform(platform);
         }
-    }
-
-    public void Init(SpawnerCubes spawner) => _spawner = spawner;
+    }    
 
     private void DetectFirstCollisionPlatform(Platform platform)
     {
@@ -48,8 +49,8 @@ public class Cube : MonoBehaviour
         _collisionPlatform = null;
         _meshRenderer.material.color = _defaulColor;
 
-        if (_spawner)
-            _spawner.Realease(this);
+        if (ReadyOnReleasing != null)
+            ReadyOnReleasing.Invoke(this);
         else
             Destroy(gameObject);
     }
