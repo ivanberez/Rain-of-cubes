@@ -10,7 +10,7 @@ public class Cube : MonoBehaviour, ISpawnedObject<Cube>
     private MeshRenderer _meshRenderer;
     private Color _defaulColor;
 
-    private bool _isNotCollisionPlatform = true;
+    private bool _isCollisionPlatform = false;
 
     public event System.Action<Cube> ReadyOnReleasing;
 
@@ -22,11 +22,11 @@ public class Cube : MonoBehaviour, ISpawnedObject<Cube>
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (_isNotCollisionPlatform)
+        if (_isCollisionPlatform == false)
         {
             if (collision.transform.TryGetComponent(out Platform platform))
             {
-                _isNotCollisionPlatform = true;
+                _isCollisionPlatform = true;
                 _meshRenderer.material.color = new Color(Random.value, Random.value, Random.value);
                 Invoke(nameof(Release), Random.Range(_minReleaseTime, _maxReleaseTime));
             }
@@ -35,7 +35,7 @@ public class Cube : MonoBehaviour, ISpawnedObject<Cube>
 
     private void Release()
     {
-        _isNotCollisionPlatform = true;
+        _isCollisionPlatform = false;
         _meshRenderer.material.color = _defaulColor;
 
         if (ReadyOnReleasing != null)
