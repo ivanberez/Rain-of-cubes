@@ -22,5 +22,4 @@ public class VisualizingBomb
     {
         _renderer.material.color = _defaultColor;
     }
-
 }

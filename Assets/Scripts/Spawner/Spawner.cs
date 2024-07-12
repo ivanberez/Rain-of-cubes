@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Spawner<T> : MonoBehaviour, IStatisticSpawner where T : MonoBehaviour, ISpawnedObject<T> 
+public class Spawner<T> : MonoBehaviour, IStatisticCounter where T : MonoBehaviour, ISpawnedObject<T> 
 {
     [Header("Base params spawner")]
     [SerializeField] private T _prefab;
@@ -16,7 +16,6 @@ public class Spawner<T> : MonoBehaviour, IStatisticSpawner where T : MonoBehavio
 
     public int CountActive => Pool.CountActive;
     public int CountAll { get; protected set; }
-
 
     protected ObjectPool<T> Pool;    
 

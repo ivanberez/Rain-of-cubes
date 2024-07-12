@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.UI
 {
-    public class ShowerStatistic<T> : MonoBehaviour where T : IStatisticSpawner
+    public class CounterStatistics<T> : MonoBehaviour where T : IStatisticCounter
     {
         [SerializeField] private T _statistic;
         [SerializeField] private TextMeshProUGUI _textActive;

@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Spawner
 {
-    public interface IStatisticSpawner
+    public interface IStatisticCounter
     {
         event Action StatChanged;
 

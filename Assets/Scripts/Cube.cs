@@ -10,8 +10,7 @@ public class Cube : MonoBehaviour, ISpawnedObject<Cube>
     private MeshRenderer _meshRenderer;
     private Color _defaulColor;
 
-    private SpawnerCubes _spawner;
-    private Platform _collisionPlatform;
+    private bool _isNotCollisionPlatform = true;
 
     public event System.Action<Cube> ReadyOnReleasing;
 
@@ -23,30 +22,20 @@ public class Cube : MonoBehaviour, ISpawnedObject<Cube>
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.TryGetComponent(out Platform platform))
+        if (_isNotCollisionPlatform)
         {
-            if (_collisionPlatform == null)
-                DetectFirstCollisionPlatform(platform);
-            else if (_collisionPlatform != platform)
-                ChangeCollisionPlatform(platform);
-        }
-    }    
-
-    private void DetectFirstCollisionPlatform(Platform platform)
-    {
-        Invoke(nameof(Release), Random.Range(_minReleaseTime, _maxReleaseTime));
-        ChangeCollisionPlatform(platform);
-    }
-
-    private void ChangeCollisionPlatform(Platform platform)
-    {
-        _collisionPlatform = platform;
-        _meshRenderer.material.color = new Color(Random.value, Random.value, Random.value);
-    }
+            if (collision.transform.TryGetComponent(out Platform platform))
+            {
+                _isNotCollisionPlatform = true;
+                _meshRenderer.material.color = new Color(Random.value, Random.value, Random.value);
+                Invoke(nameof(Release), Random.Range(_minReleaseTime, _maxReleaseTime));
+            }
+        }               
+    }        
 
     private void Release()
     {
-        _collisionPlatform = null;
+        _isNotCollisionPlatform = true;
         _meshRenderer.material.color = _defaulColor;
 
         if (ReadyOnReleasing != null)
